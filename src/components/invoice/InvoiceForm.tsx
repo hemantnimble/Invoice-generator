@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { invoiceSchema, type InvoiceSchema } from "@/lib/invoice-schema";
@@ -7,7 +8,6 @@ import { generateInvoiceNumber } from "@/lib/invoice-utils";
 import { format } from "date-fns";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react"; // ✅ Fixed: Import React hooks properly
 
 type Props = {
   onChange: (data: InvoiceSchema) => void;
@@ -39,9 +39,12 @@ export default function InvoiceForm({ onChange }: Props) {
     name: "items",
   });
 
-  // ✅ Fixed: Removed unused 'values' variable
-  // Notify parent on every change
-  useFormWatch({ watch, onChange });
+  useEffect(() => {
+    const sub = watch((value) => {
+      onChange(value as InvoiceSchema);
+    });
+    return () => sub.unsubscribe();
+  }, [watch, onChange]);
 
   return (
     <div className="bg-white rounded-2xl shadow p-6 space-y-6">
@@ -163,23 +166,6 @@ export default function InvoiceForm({ onChange }: Props) {
 }
 
 // ── Helpers ──────────────────────────────────────────────
-
-// ✅ Fixed: Changed 'require' to proper import
-// The import is now at the top of the file
-function useFormWatch({
-  watch,
-  onChange,
-}: {
-  watch: ReturnType<typeof useForm<InvoiceSchema>>["watch"];
-  onChange: (data: InvoiceSchema) => void;
-}) {
-  useEffect(() => {
-    const sub = watch((value) => {
-      onChange(value as InvoiceSchema);
-    });
-    return () => sub.unsubscribe();
-  }, [watch, onChange]);
-}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
