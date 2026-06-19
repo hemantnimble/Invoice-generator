@@ -180,8 +180,8 @@ export default function InvoicePDF({ data }: Props) {
             <Text style={[{ fontSize: 9, fontFamily: "Helvetica-Bold" }, styles.colName]}>{item.name || "—"}</Text>
             <Text style={[{ fontSize: 9, color: "#9ca3af" }, styles.colHsn]}>—</Text>
             <Text style={[{ fontSize: 9 }, styles.colQty]}>{item.quantity}</Text>
-            <Text style={[{ fontSize: 9 }, styles.colPrice]}>₹ {formatCurrency(item.pricePerUnit)}</Text>
-            <Text style={[{ fontSize: 9 }, styles.colAmt]}>₹ {formatCurrency(item.quantity * item.pricePerUnit)}</Text>
+            <Text style={[{ fontSize: 9 }, styles.colPrice]}>Rs. {formatCurrency(item.pricePerUnit)}</Text>
+            <Text style={[{ fontSize: 9 }, styles.colAmt]}>Rs. {formatCurrency(item.quantity * item.pricePerUnit)}</Text>
           </View>
         ))}
 
@@ -195,7 +195,7 @@ export default function InvoicePDF({ data }: Props) {
           </Text>
           <Text style={styles.colPrice} />
           <Text style={[{ fontSize: 9, fontFamily: "Helvetica-Bold" }, styles.colAmt]}>
-            ₹ {formatCurrency(invoice.total)}
+            Rs. {formatCurrency(invoice.total)}
           </Text>
         </View>
 
@@ -208,21 +208,21 @@ export default function InvoicePDF({ data }: Props) {
           <View style={styles.summaryBox}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Sub Total</Text>
-              <Text style={styles.summaryValue}>₹ {formatCurrency(invoice.subTotal)}</Text>
+              <Text style={styles.summaryValue}>Rs. {formatCurrency(invoice.subTotal)}</Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
               <Text style={styles.summaryTotalLabel}>Total</Text>
-              <Text style={styles.summaryTotalValue}>₹ {formatCurrency(invoice.total)}</Text>
+              <Text style={styles.summaryTotalValue}>Rs. {formatCurrency(invoice.total)}</Text>
             </View>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Received</Text>
-              <Text style={styles.summaryValue}>₹ {formatCurrency(invoice.amountReceived || 0)}</Text>
+              <Text style={styles.summaryValue}>Rs. {formatCurrency(invoice.amountReceived || 0)}</Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
               <Text style={styles.summaryBalanceLabel}>Balance</Text>
-              <Text style={styles.summaryBalanceValue}>₹ {formatCurrency(invoice.balance)}</Text>
+              <Text style={styles.summaryBalanceValue}>Rs. {formatCurrency(invoice.balance)}</Text>
             </View>
           </View>
         </View>
