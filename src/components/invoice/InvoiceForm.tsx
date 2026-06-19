@@ -7,6 +7,7 @@ import { generateInvoiceNumber } from "@/lib/invoice-utils";
 import { format } from "date-fns";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react"; // ✅ Fixed: Import React hooks properly
 
 type Props = {
   onChange: (data: InvoiceSchema) => void;
@@ -38,8 +39,7 @@ export default function InvoiceForm({ onChange }: Props) {
     name: "items",
   });
 
-  // Watch and bubble up changes
-  const values = watch();
+  // ✅ Fixed: Removed unused 'values' variable
   // Notify parent on every change
   useFormWatch({ watch, onChange });
 
@@ -164,6 +164,8 @@ export default function InvoiceForm({ onChange }: Props) {
 
 // ── Helpers ──────────────────────────────────────────────
 
+// ✅ Fixed: Changed 'require' to proper import
+// The import is now at the top of the file
 function useFormWatch({
   watch,
   onChange,
@@ -171,8 +173,7 @@ function useFormWatch({
   watch: ReturnType<typeof useForm<InvoiceSchema>>["watch"];
   onChange: (data: InvoiceSchema) => void;
 }) {
-  const React = require("react");
-  React.useEffect(() => {
+  useEffect(() => {
     const sub = watch((value) => {
       onChange(value as InvoiceSchema);
     });
