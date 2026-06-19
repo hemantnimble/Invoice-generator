@@ -1,103 +1,97 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useCallback } from "react";
+import InvoiceForm from "@/components/invoice/InvoiceForm";
+import InvoicePreview from "@/components/invoice/InvoicePreview";
+import DownloadButton from "@/components/invoice/DownloadButton";
+import PWAInstallBanner from "@/components/PWAInstallBanner";
+import type { InvoiceSchema } from "@/lib/invoice-schema";
+import { generateInvoiceNumber } from "@/lib/invoice-utils";
+import { format } from "date-fns";
+import { FileText, Eye } from "lucide-react";
+
+const defaultValues: InvoiceSchema = {
+  clientName: "",
+  clientContact: "",
+  invoiceNumber: generateInvoiceNumber(),
+  invoiceDate: format(new Date(), "yyyy-MM-dd"),
+  items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
+  amountReceived: 0,
+  businessName: "Villas Rental",
+  businessPhone: "8999130727",
+};
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [invoiceData, setInvoiceData] = useState<InvoiceSchema>(defaultValues);
+  const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleChange = useCallback((data: InvoiceSchema) => {
+    setInvoiceData(data);
+  }, []);
+
+  return (
+    <main className="min-h-screen bg-gray-50">
+      {/* Top Bar */}
+      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+            <span className="text-white text-xs font-bold">VI</span>
+          </div>
+          <h1 className="text-lg font-bold text-gray-900">Villa Invoice</h1>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
+          Free Plan
+        </span>
+      </header>
+
+      {/* Mobile Tab Switcher */}
+      <div className="lg:hidden flex border-b border-gray-200 bg-white">
+        <button
+          onClick={() => setMobileTab("form")}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            mobileTab === "form"
+              ? "text-indigo-600 border-b-2 border-indigo-600"
+              : "text-gray-500"
+          }`}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <FileText size={16} /> Fill Details
+        </button>
+        <button
+          onClick={() => setMobileTab("preview")}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            mobileTab === "preview"
+              ? "text-indigo-600 border-b-2 border-indigo-600"
+              : "text-gray-500"
+          }`}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Eye size={16} /> Preview
+        </button>
+      </div>
+
+      {/* Layout */}
+      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left — Form */}
+        <div className={`space-y-4 ${mobileTab === "preview" ? "hidden lg:block" : ""}`}>
+          <p className="text-sm text-gray-500 font-medium hidden lg:block">
+            Fill Invoice Details
+          </p>
+          <InvoiceForm onChange={handleChange} />
+        </div>
+
+        {/* Right — Preview */}
+        <div className={`space-y-4 ${mobileTab === "form" ? "hidden lg:block" : ""}`}>
+          <p className="text-sm text-gray-500 font-medium hidden lg:block">
+            Live Preview
+          </p>
+          <div className="lg:sticky lg:top-24 space-y-4">
+            <InvoicePreview data={invoiceData} />
+            <DownloadButton data={invoiceData} />
+          </div>
+        </div>
+      </div>
+
+      {/* PWA Install Banner */}
+      <PWAInstallBanner />
+    </main>
   );
 }
