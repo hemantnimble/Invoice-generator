@@ -7,26 +7,43 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+// Store event globally so we never miss it even if it fires before hook mounts
+let cachedPrompt: BeforeInstallPromptEvent | null = null;
+
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    cachedPrompt = e as BeforeInstallPromptEvent;
+  });
+}
+
 export function usePWAInstall() {
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    // Check if already installed
+    // Already installed
     if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
       return;
     }
 
-    // Check iOS
+    // iOS detection
     const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
     setIsIOS(ios);
 
-    // Capture install prompt (Android/Desktop Chrome)
+    // Use cached prompt if already fired
+    if (cachedPrompt) {
+      setInstallEvent(cachedPrompt);
+      return;
+    }
+
+    // Otherwise wait for it
     const handler = (e: Event) => {
       e.preventDefault();
-      setInstallEvent(e as BeforeInstallPromptEvent);
+      cachedPrompt = e as BeforeInstallPromptEvent;
+      setInstallEvent(cachedPrompt);
     };
 
     window.addEventListener("beforeinstallprompt", handler);
@@ -39,6 +56,7 @@ export function usePWAInstall() {
     const { outcome } = await installEvent.userChoice;
     if (outcome === "accepted") {
       setIsInstalled(true);
+      cachedPrompt = null;
       setInstallEvent(null);
     }
   };
