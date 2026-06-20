@@ -13,6 +13,8 @@ import { format } from "date-fns";
 import { ArrowLeft, FileText, Eye, Save, Loader2, Check } from "lucide-react";
 import type { Profile } from "@/types/database";
 import ShareImageButton from "@/components/invoice/ShareImageButton";
+import { DEFAULT_POLICIES } from "@/lib/default-policies";
+
 
 export default function NewInvoicePage() {
   const { status } = useSession();
@@ -66,16 +68,25 @@ export default function NewInvoicePage() {
     );
   }
 
-  const defaultValues: InvoiceSchema = {
-    clientName: "",
-    clientContact: "",
-    invoiceNumber: generateInvoiceNumber(),
-    invoiceDate: format(new Date(), "yyyy-MM-dd"),
-    items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
-    amountReceived: 0,
-    businessName: profile.business_name,
-    businessPhone: profile.business_phone,
-  };
+ const defaultValues: InvoiceSchema = {
+  clientName: "",
+  clientContact: "",
+  invoiceNumber: generateInvoiceNumber(),
+  invoiceDate: format(new Date(), "yyyy-MM-dd"),
+  villaName: "",
+  checkInDate: "",
+  checkInTime: "13:00",
+  checkOutDate: "",
+  checkOutTime: "11:00",
+  guestCount: "",
+  foodIncluded: false,
+  items: [{ id: crypto.randomUUID(), name: "Villa Stay", quantity: 1, pricePerUnit: 0 }],
+  amountReceived: 0,
+  securityDeposit: 0,
+  policies: DEFAULT_POLICIES,
+  businessName: profile.business_name,
+  businessPhone: profile.business_phone,
+};
 
   return (
     <main className="min-h-screen bg-gray-50">

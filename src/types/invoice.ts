@@ -6,21 +6,27 @@ export type LineItem = {
 };
 
 export type InvoiceFormData = {
-  // Bill To
   clientName: string;
   clientContact: string;
 
-  // Invoice Details
   invoiceNumber: string;
   invoiceDate: string;
 
-  // Items
+  villaName?: string;
+  checkInDate?: string;
+  checkInTime?: string;
+  checkOutDate?: string;
+  checkOutTime?: string;
+  guestCount?: string;
+  foodIncluded?: boolean;
+
   items: LineItem[];
 
-  // Payment
   amountReceived: number;
+  securityDeposit?: number;
 
-  // Optional (logged in users later)
+  policies?: string;
+
   businessName?: string;
   businessPhone?: string;
 };

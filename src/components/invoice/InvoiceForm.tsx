@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { invoiceSchema, type InvoiceSchema } from "@/lib/invoice-schema";
 import { generateInvoiceNumber } from "@/lib/invoice-utils";
+import { DEFAULT_POLICIES } from "@/lib/default-policies";
 import { format } from "date-fns";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,25 @@ type Props = {
   defaultValues?: InvoiceSchema;
 };
 
+const baseDefaults: InvoiceSchema = {
+  clientName: "",
+  clientContact: "",
+  invoiceNumber: generateInvoiceNumber(),
+  invoiceDate: format(new Date(), "yyyy-MM-dd"),
+  villaName: "",
+  checkInDate: "",
+  checkInTime: "13:00",
+  checkOutDate: "",
+  checkOutTime: "11:00",
+  guestCount: "",
+  foodIncluded: false,
+  items: [{ id: crypto.randomUUID(), name: "Villa Stay", quantity: 1, pricePerUnit: 0 }],
+  amountReceived: 0,
+  securityDeposit: 0,
+  policies: DEFAULT_POLICIES,
+  businessName: "Villas Rental",
+  businessPhone: "8999130727",
+};
 
 export default function InvoiceForm({ onChange, defaultValues }: Props) {
   const {
@@ -23,16 +43,7 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
     formState: { errors },
   } = useForm<InvoiceSchema>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: defaultValues ?? {
-      clientName: "",
-      clientContact: "",
-      invoiceNumber: generateInvoiceNumber(),
-      invoiceDate: format(new Date(), "yyyy-MM-dd"),
-      items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
-      amountReceived: 0,
-      businessName: "Villas Rental",
-      businessPhone: "8999130727",
-    },
+    defaultValues: defaultValues ?? baseDefaults,
     mode: "onChange",
   });
 
@@ -88,10 +99,58 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
         </div>
       </Section>
 
+      {/* Villa Booking Details */}
+      <Section title="Booking Details">
+        <div className="space-y-4">
+          <Field label="Villa Name">
+            <input
+              {...register("villaName")}
+              placeholder="e.g. CAPSTONE VILLA (3 BHK)"
+              className={inputClass}
+            />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Check-in Date">
+              <input type="date" {...register("checkInDate")} className={inputClass} />
+            </Field>
+            <Field label="Check-in Time">
+              <input type="time" {...register("checkInTime")} className={inputClass} />
+            </Field>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Check-out Date">
+              <input type="date" {...register("checkOutDate")} className={inputClass} />
+            </Field>
+            <Field label="Check-out Time">
+              <input type="time" {...register("checkOutTime")} className={inputClass} />
+            </Field>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 items-end">
+            <Field label="Guests">
+              <input
+                {...register("guestCount")}
+                placeholder="e.g. 9 Adults"
+                className={inputClass}
+              />
+            </Field>
+            <label className="flex items-center gap-2 pb-2 text-sm text-gray-700 cursor-pointer">
+              <input
+                type="checkbox"
+                {...register("foodIncluded")}
+                className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-400"
+              />
+              Food Package Included
+            </label>
+          </div>
+        </div>
+      </Section>
+
       {/* Line Items */}
-      <Section title="Items">
+      <Section title="Charges">
         <div className="space-y-3">
-          {/* Header */}
           <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-500 uppercase px-1">
             <span className="col-span-5">Item Name</span>
             <span className="col-span-2 text-center">Qty</span>
@@ -111,7 +170,7 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
               <div className="col-span-2">
                 <input
                   type="number"
-                  {...register(`items.${index}.quantity`)}
+                  {...register(`items.${index}.quantity`, { valueAsNumber: true })}
                   min={1}
                   className={cn(inputClass, "text-center")}
                 />
@@ -119,7 +178,7 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
               <div className="col-span-3">
                 <input
                   type="number"
-                  {...register(`items.${index}.pricePerUnit`)}
+                  {...register(`items.${index}.pricePerUnit`, { valueAsNumber: true })}
                   min={0}
                   placeholder="0"
                   className={cn(inputClass, "text-right")}
@@ -153,15 +212,36 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
 
       {/* Payment */}
       <Section title="Payment">
-        <Field label="Amount Received (₹)" error={errors.amountReceived?.message}>
-          <input
-            type="number"
-            {...register("amountReceived")}
-            min={0}
-            placeholder="0"
-            className={inputClass}
-          />
-        </Field>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Amount Received (₹)" error={errors.amountReceived?.message}>
+            <input
+              type="number"
+              {...register("amountReceived", { valueAsNumber: true })}
+              min={0}
+              placeholder="0"
+              className={inputClass}
+            />
+          </Field>
+          <Field label="Security Deposit (₹, refundable)">
+            <input
+              type="number"
+              {...register("securityDeposit", { valueAsNumber: true })}
+              min={0}
+              placeholder="0"
+              className={inputClass}
+            />
+          </Field>
+        </div>
+      </Section>
+
+      {/* Policies */}
+      <Section title="Home Rules / Policies (optional, shown on invoice if filled)">
+        <textarea
+          {...register("policies")}
+          rows={8}
+          className={cn(inputClass, "font-mono text-xs leading-relaxed resize-y")}
+          placeholder="Leave empty to hide this section on the invoice"
+        />
       </Section>
     </div>
   );
@@ -200,3 +280,6 @@ function Field({
 
 const inputClass =
   "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition placeholder:text-gray-300";
+
+
+export { baseDefaults };  

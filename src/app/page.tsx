@@ -11,20 +11,21 @@ import { format } from "date-fns";
 import { FileText, Eye } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import ShareImageButton from "@/components/invoice/ShareImageButton";
+import { baseDefaults } from "@/components/invoice/InvoiceForm";
 
-const defaultValues: InvoiceSchema = {
-  clientName: "",
-  clientContact: "",
-  invoiceNumber: generateInvoiceNumber(),
-  invoiceDate: format(new Date(), "yyyy-MM-dd"),
-  items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
-  amountReceived: 0,
-  businessName: "Villas Rental",
-  businessPhone: "8999130727",
-};
+// const defaultValues: InvoiceSchema = {
+//   clientName: "",
+//   clientContact: "",
+//   invoiceNumber: generateInvoiceNumber(),
+//   invoiceDate: format(new Date(), "yyyy-MM-dd"),
+//   items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
+//   amountReceived: 0,
+//   businessName: "Villas Rental",
+//   businessPhone: "8999130727",
+// };
 
 export default function Home() {
-  const [invoiceData, setInvoiceData] = useState<InvoiceSchema>(defaultValues);
+  const [invoiceData, setInvoiceData] = useState<InvoiceSchema>(baseDefaults);
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
 
   const handleChange = useCallback((data: InvoiceSchema) => {
