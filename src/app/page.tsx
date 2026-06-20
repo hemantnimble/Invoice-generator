@@ -6,23 +6,11 @@ import InvoicePreview from "@/components/invoice/InvoicePreview";
 import DownloadButton from "@/components/invoice/DownloadButton";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
-import { computeInvoice, generateInvoiceNumber } from "@/lib/invoice-utils";
-import { format } from "date-fns";
 import { FileText, Eye } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import ShareImageButton from "@/components/invoice/ShareImageButton";
 import { baseDefaults } from "@/components/invoice/InvoiceForm";
 
-// const defaultValues: InvoiceSchema = {
-//   clientName: "",
-//   clientContact: "",
-//   invoiceNumber: generateInvoiceNumber(),
-//   invoiceDate: format(new Date(), "yyyy-MM-dd"),
-//   items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
-//   amountReceived: 0,
-//   businessName: "Villas Rental",
-//   businessPhone: "8999130727",
-// };
 
 export default function Home() {
   const [invoiceData, setInvoiceData] = useState<InvoiceSchema>(baseDefaults);
@@ -50,8 +38,8 @@ export default function Home() {
         <button
           onClick={() => setMobileTab("form")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "form"
-              ? "text-indigo-600 border-b-2 border-indigo-600"
-              : "text-gray-500"
+            ? "text-indigo-600 border-b-2 border-indigo-600"
+            : "text-gray-500"
             }`}
         >
           <FileText size={16} /> Fill Details
@@ -59,8 +47,8 @@ export default function Home() {
         <button
           onClick={() => setMobileTab("preview")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "preview"
-              ? "text-indigo-600 border-b-2 border-indigo-600"
-              : "text-gray-500"
+            ? "text-indigo-600 border-b-2 border-indigo-600"
+            : "text-gray-500"
             }`}
         >
           <Eye size={16} /> Preview
@@ -83,7 +71,9 @@ export default function Home() {
             Live Preview
           </p>
           <div className="lg:sticky lg:top-24 space-y-4">
-            <InvoicePreview data={invoiceData} />
+            <div className="overflow-x-auto">
+              <InvoicePreview data={invoiceData} />
+            </div>
             <DownloadButton data={invoiceData} />
             <ShareImageButton
               targetId="invoice-preview"

@@ -102,17 +102,15 @@ export default function NewInvoicePage() {
       <div className="lg:hidden flex border-b border-gray-200 bg-white">
         <button
           onClick={() => setMobileTab("form")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
-            mobileTab === "form" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "form" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
+            }`}
         >
           <FileText size={16} /> Fill Details
         </button>
         <button
           onClick={() => setMobileTab("preview")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
-            mobileTab === "preview" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "preview" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
+            }`}
         >
           <Eye size={16} /> Preview
         </button>
@@ -126,7 +124,9 @@ export default function NewInvoicePage() {
 
         <div className={`space-y-4 ${mobileTab === "form" ? "hidden lg:block" : ""}`}>
           <div className="lg:sticky lg:top-24 space-y-4">
-            <InvoicePreview data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} />
+            <div className="overflow-x-auto">
+              <InvoicePreview data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} />
+            </div>
             <DownloadButton data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} />
             <ShareImageButton
               targetId="invoice-preview"

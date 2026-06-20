@@ -76,11 +76,13 @@ export default function ViewInvoicePage() {
       </header>
 
       <div className="max-w-xl mx-auto px-4 py-8 space-y-4">
-        <InvoicePreview
-          data={invoiceData}
-          logoUrl={profile?.logo_url}
-          signatureUrl={profile?.signature_url}
-        />
+        <div className="overflow-x-auto">
+          <InvoicePreview
+            data={invoiceData}
+            logoUrl={profile?.logo_url}
+            signatureUrl={profile?.signature_url}
+          />
+        </div>
         <DownloadButton
           data={invoiceData}
           logoUrl={profile?.logo_url}

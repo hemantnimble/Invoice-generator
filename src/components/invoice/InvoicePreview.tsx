@@ -31,7 +31,7 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
     <div
       id="invoice-preview"
       className="bg-white rounded-2xl shadow p-8 text-gray-800 font-sans min-h-[600px]"
-      style={{ fontFamily: "Arial, sans-serif" }}
+      style={{ fontFamily: "Arial, sans-serif", width: "595px", maxWidth: "595px" }}
     >
       {/* Header */}
       <div className="flex justify-between items-start mb-6 pb-4 border-b-2 border-gray-200">
@@ -44,14 +44,12 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
             Phone no.: {invoice.businessPhone || "—"}
           </p>
         </div>
-        <div className="w-16 h-16 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs text-gray-400 font-medium overflow-hidden shrink-0">
-          {logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
+        {logoUrl && (
+          <div className="w-16 h-16 rounded-full border-2 border-gray-300 flex items-center justify-center overflow-hidden shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
-          ) : (
-            "LOGO"
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Title */}
@@ -60,7 +58,7 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
       </h2>
 
       {/* Bill To + Invoice Details */}
-      <div className="flex justify-between mb-6">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
         <div>
           <p className="text-sm font-bold text-gray-700 mb-1">Bill To</p>
           <p className="font-semibold text-gray-900">{invoice.clientName || "—"}</p>
@@ -92,7 +90,7 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
               🏠 {invoice.villaName}
             </p>
           )}
-          <div className="grid grid-cols-2 gap-y-2 text-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-sm">
             <div>
               <span className="text-gray-500">Check-in: </span>
               <span className="font-medium text-gray-900">
@@ -161,13 +159,13 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
       </table>
 
       {/* Amount in Words + Summary */}
-      <div className="flex justify-between items-start gap-6 mt-4">
-        <div className="flex-1 bg-gray-50 rounded-lg p-3 text-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 sm:gap-6 mt-4">
+        <div className="w-full sm:flex-1 bg-gray-50 rounded-lg p-3 text-sm">
           <span className="font-bold">Invoice Amount In Words: </span>
           <span className="text-gray-700">{invoice.amountInWords}</span>
         </div>
 
-        <div className="w-56 text-sm space-y-2">
+        <div className="w-full sm:w-56 text-sm space-y-2">
           <div className="flex justify-between text-gray-600">
             <span>Sub Total</span>
             <span>₹ {formatCurrency(invoice.subTotal)}</span>
@@ -208,15 +206,13 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
       {/* Signature */}
       <div className="mt-10 text-right text-sm text-gray-600">
         <p>For: {invoice.businessName || "Villas Rental"}</p>
-        <div className="mt-8 mb-2 ml-auto" style={{ width: 160, height: 60 }}>
-          {signatureUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
+        {signatureUrl && (
+          <div className="mt-8 mb-2 ml-auto" style={{ width: 160, height: 60 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={signatureUrl} alt="Signature" className="w-full h-full object-contain ml-auto" />
-          ) : (
-            <div className="border-t border-gray-300 w-40 ml-auto mt-12" />
-          )}
-        </div>
-        <p className="font-semibold text-gray-800">Authorized Signatory</p>
+          </div>
+        )}
+        <p className="font-semibold text-gray-800 mt-4">Authorized Signatory</p>
       </div>
     </div>
   );
