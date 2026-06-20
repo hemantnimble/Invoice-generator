@@ -6,15 +6,19 @@ import InvoicePDF from "./InvoicePDF";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
 import { Download } from "lucide-react";
 
-type Props = { data: InvoiceSchema };
+type Props = {
+  data: InvoiceSchema;
+  logoUrl?: string | null;
+  signatureUrl?: string | null;
+};
 
-export default function DownloadButton({ data }: Props) {
+export default function DownloadButton({ data, logoUrl, signatureUrl }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleDownload = async () => {
     setLoading(true);
     try {
-      const blob = await pdf(<InvoicePDF data={data} />).toBlob();
+      const blob = await pdf(<InvoicePDF data={data} logoUrl={logoUrl} signatureUrl={signatureUrl} />).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;

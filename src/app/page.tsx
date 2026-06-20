@@ -9,6 +9,7 @@ import type { InvoiceSchema } from "@/lib/invoice-schema";
 import { generateInvoiceNumber } from "@/lib/invoice-utils";
 import { format } from "date-fns";
 import { FileText, Eye } from "lucide-react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const defaultValues: InvoiceSchema = {
   clientName: "",
@@ -39,9 +40,7 @@ export default function Home() {
           </div>
           <h1 className="text-lg font-bold text-gray-900">Villa Invoice</h1>
         </div>
-        <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
-          Free Plan
-        </span>
+        <AuthButton />
       </header>
 
       {/* Mobile Tab Switcher */}
@@ -93,5 +92,39 @@ export default function Home() {
       {/* PWA Install Banner */}
       <PWAInstallBanner />
     </main>
+  );
+}
+
+
+function AuthButton() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return <div className="w-20 h-8 bg-gray-100 rounded-full animate-pulse" />;
+  }
+
+  if (session) {
+    return (
+      <div className="flex items-center gap-2">
+        <a href="/dashboard" className="text-xs text-indigo-600 font-medium hover:underline">
+          Dashboard
+        </a>
+        <button
+          onClick={() => signOut({ callbackUrl: "/" })}
+          className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition"
+        >
+          Sign Out
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => signIn("google")}
+      className="text-xs text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100 transition font-medium"
+    >
+      Sign In
+    </button>
   );
 }

@@ -11,9 +11,11 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   onChange: (data: InvoiceSchema) => void;
+  defaultValues?: InvoiceSchema;
 };
 
-export default function InvoiceForm({ onChange }: Props) {
+
+export default function InvoiceForm({ onChange, defaultValues }: Props) {
   const {
     register,
     control,
@@ -21,7 +23,7 @@ export default function InvoiceForm({ onChange }: Props) {
     formState: { errors },
   } = useForm<InvoiceSchema>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: {
+    defaultValues: defaultValues ?? {
       clientName: "",
       clientContact: "",
       invoiceNumber: generateInvoiceNumber(),

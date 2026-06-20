@@ -6,9 +6,11 @@ import { format } from "date-fns";
 
 type Props = {
   data: InvoiceSchema;
+  logoUrl?: string | null;
+  signatureUrl?: string | null;
 };
 
-export default function InvoicePreview({ data }: Props) {
+export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
   const invoice = computeInvoice(data);
 
   const formatDate = (dateStr: string) => {
@@ -36,10 +38,13 @@ export default function InvoicePreview({ data }: Props) {
             Phone no.: {invoice.businessPhone || "—"}
           </p>
         </div>
-        <div className="text-right">
-          <div className="w-16 h-16 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs text-gray-400 font-medium">
-            LOGO
-          </div>
+        <div className="w-16 h-16 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs text-gray-400 font-medium overflow-hidden">
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+          ) : (
+            "LOGO"
+          )}
         </div>
       </div>
 
@@ -153,10 +158,13 @@ export default function InvoicePreview({ data }: Props) {
       </div>
 
       {/* Signature */}
-      <div className="mt-10 text-right text-sm text-gray-600">
-        <p>For: {invoice.businessName || "Villas Rental"}</p>
-        <div className="mt-8 mb-2 border-t border-gray-300 w-40 ml-auto" />
-        <p className="font-semibold text-gray-800">Authorized Signatory</p>
+      <div className="mt-8 mb-2 ml-auto" style={{ width: 160, height: 60 }}>
+        {signatureUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={signatureUrl} alt="Signature" className="w-full h-full object-contain" />
+        ) : (
+          <div className="border-t border-gray-300 w-40 ml-auto mt-12" />
+        )}
       </div>
     </div>
   );

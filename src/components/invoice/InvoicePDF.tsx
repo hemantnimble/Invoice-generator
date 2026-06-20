@@ -6,10 +6,14 @@ import {
   Text,
   View,
   StyleSheet,
+  Image,
 } from "@react-pdf/renderer";
 import { computeInvoice, formatCurrency } from "@/lib/invoice-utils";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
 import { format } from "date-fns";
+
+
+
 
 const styles = StyleSheet.create({
   page: {
@@ -119,9 +123,13 @@ const styles = StyleSheet.create({
   signatureLabel: { fontSize: 9, fontFamily: "Helvetica-Bold", color: "#111827" },
 });
 
-type Props = { data: InvoiceSchema };
+type Props = {
+  data: InvoiceSchema;
+  logoUrl?: string | null;
+  signatureUrl?: string | null;
+};
 
-export default function InvoicePDF({ data }: Props) {
+export default function InvoicePDF({ data, logoUrl, signatureUrl }: Props) {
   const invoice = computeInvoice(data);
 
   const formatDate = (dateStr: string) => {
@@ -141,7 +149,11 @@ export default function InvoicePDF({ data }: Props) {
             <Text style={styles.businessSub}>Phone no.: {invoice.businessPhone || "—"}</Text>
           </View>
           <View style={styles.logoBox}>
-            <Text style={styles.logoText}>LOGO</Text>
+            {logoUrl ? (
+              <Image src={logoUrl} style={{ width: "100%", height: "100%", borderRadius: 28 }} />
+            ) : (
+              <Text style={styles.logoText}>LOGO</Text>
+            )}
           </View>
         </View>
 
@@ -230,7 +242,11 @@ export default function InvoicePDF({ data }: Props) {
         {/* Signature */}
         <View style={styles.signatureSection}>
           <Text style={styles.signatureFor}>For: {invoice.businessName || "Villas Rental"}</Text>
-          <View style={styles.signatureLine} />
+          {signatureUrl ? (
+            <Image src={signatureUrl} style={{ width: 120, height: 50, marginTop: 12, marginBottom: 4 }} />
+          ) : (
+            <View style={styles.signatureLine} />
+          )}
           <Text style={styles.signatureLabel}>Authorized Signatory</Text>
         </View>
 
