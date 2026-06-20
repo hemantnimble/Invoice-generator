@@ -2,6 +2,7 @@
 
 import { computeInvoice, formatCurrency } from "@/lib/invoice-utils";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
+import { COLOR_THEMES, DEFAULT_THEME, type ColorThemeId } from "@/lib/color-themes";
 import { format } from "date-fns";
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 
 export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
   const invoice = computeInvoice(data);
+  const theme = COLOR_THEMES[(invoice.colorTheme as ColorThemeId) || DEFAULT_THEME];
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "—";
@@ -53,7 +55,7 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
       </div>
 
       {/* Title */}
-      <h2 className="text-center text-xl font-bold mb-6 tracking-wide">
+      <h2 className={`text-center text-xl font-bold mb-6 tracking-wide ${theme.accentText}`}>
         Booking Invoice
       </h2>
 
@@ -84,9 +86,9 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
 
       {/* Booking Details */}
       {hasBookingDetails && (
-        <div className="mb-6 bg-indigo-50 rounded-xl p-4">
+        <div className={`mb-6 rounded-xl p-4 ${theme.accentBg}`}>
           {invoice.villaName && (
-            <p className="font-bold text-indigo-900 mb-3 text-sm">
+            <p className={`font-bold mb-3 text-sm ${theme.accentText}`}>
               🏠 {invoice.villaName}
             </p>
           )}
@@ -124,7 +126,7 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
       {/* Items Table */}
       <table className="w-full mb-6 text-sm">
         <thead>
-          <tr className="bg-indigo-400 text-white">
+          <tr className={`${theme.headerBg} text-white`}>
             <th className="py-2 px-3 text-left rounded-tl-md w-8">#</th>
             <th className="py-2 px-3 text-left">Charge</th>
             <th className="py-2 px-3 text-center w-20">Qty</th>
@@ -178,7 +180,7 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
             <span>Received</span>
             <span>₹ {formatCurrency(invoice.amountReceived || 0)}</span>
           </div>
-          <div className="flex justify-between font-bold text-indigo-700 border-t border-gray-200 pt-2">
+          <div className={`flex justify-between font-bold border-t border-gray-200 pt-2 ${theme.accentText}`}>
             <span>Balance</span>
             <span>₹ {formatCurrency(invoice.balance)}</span>
           </div>

@@ -11,7 +11,7 @@ import {
 import { computeInvoice, formatCurrency } from "@/lib/invoice-utils";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
 import { format } from "date-fns";
-
+import { COLOR_THEMES, DEFAULT_THEME, type ColorThemeId } from "@/lib/color-themes";
 
 
 
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
   // Table
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#818cf8",
     borderRadius: 4,
     paddingVertical: 6,
     paddingHorizontal: 8,
@@ -113,8 +112,8 @@ const styles = StyleSheet.create({
   summaryValue: { fontSize: 9, color: "#111827" },
   summaryTotalLabel: { fontSize: 10, fontFamily: "Helvetica-Bold", color: "#111827" },
   summaryTotalValue: { fontSize: 10, fontFamily: "Helvetica-Bold", color: "#111827" },
-  summaryBalanceLabel: { fontSize: 10, fontFamily: "Helvetica-Bold", color: "#4338ca" },
-  summaryBalanceValue: { fontSize: 10, fontFamily: "Helvetica-Bold", color: "#4338ca" },
+  summaryBalanceLabel: { fontSize: 10, fontFamily: "Helvetica-Bold" },
+  summaryBalanceValue: { fontSize: 10, fontFamily: "Helvetica-Bold" },
   divider: { borderTopWidth: 1, borderTopColor: "#e5e7eb", marginVertical: 4 },
   // Signature
   signatureSection: { marginTop: 40, alignItems: "flex-end" },
@@ -131,7 +130,7 @@ type Props = {
 
 export default function InvoicePDF({ data, logoUrl, signatureUrl }: Props) {
   const invoice = computeInvoice(data);
-
+  const theme = COLOR_THEMES[(invoice.colorTheme as ColorThemeId) || DEFAULT_THEME];
   const formatDate = (dateStr: string) => {
     try { return format(new Date(dateStr), "dd-MM-yyyy"); }
     catch { return dateStr; }
@@ -176,7 +175,7 @@ export default function InvoicePDF({ data, logoUrl, signatureUrl }: Props) {
         </View>
 
         {/* Table Header */}
-        <View style={styles.tableHeader}>
+        <View style={[styles.tableHeader, { backgroundColor: theme.hex.header }]}>
           <Text style={[styles.tableHeaderText, styles.colNum]}>#</Text>
           <Text style={[styles.tableHeaderText, styles.colName]}>Item Name</Text>
           <Text style={[styles.tableHeaderText, styles.colHsn]}>HSN/SAC</Text>
@@ -233,8 +232,8 @@ export default function InvoicePDF({ data, logoUrl, signatureUrl }: Props) {
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryBalanceLabel}>Balance</Text>
-              <Text style={styles.summaryBalanceValue}>Rs. {formatCurrency(invoice.balance)}</Text>
+              <Text style={[styles.summaryBalanceLabel, { color: theme.hex.accent }]}>Balance</Text>
+              <Text style={[styles.summaryBalanceValue, { color: theme.hex.accent }]}>Rs. {formatCurrency(invoice.balance)}</Text>
             </View>
           </View>
         </View>

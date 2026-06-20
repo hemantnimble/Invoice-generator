@@ -4,17 +4,14 @@ import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import InvoiceForm from "@/components/invoice/InvoiceForm";
 import InvoicePreview from "@/components/invoice/InvoicePreview";
 import DownloadButton from "@/components/invoice/DownloadButton";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
 import { computeInvoice, generateInvoiceNumber } from "@/lib/invoice-utils";
-import { format } from "date-fns";
 import { ArrowLeft, FileText, Eye, Save, Loader2, Check } from "lucide-react";
 import type { Profile } from "@/types/database";
 import ShareImageButton from "@/components/invoice/ShareImageButton";
-import { DEFAULT_POLICIES } from "@/lib/default-policies";
-
+import InvoiceForm, { baseDefaults } from "@/components/invoice/InvoiceForm";
 
 export default function NewInvoicePage() {
   const { status } = useSession();
@@ -68,25 +65,12 @@ export default function NewInvoicePage() {
     );
   }
 
- const defaultValues: InvoiceSchema = {
-  clientName: "",
-  clientContact: "",
-  invoiceNumber: generateInvoiceNumber(),
-  invoiceDate: format(new Date(), "yyyy-MM-dd"),
-  villaName: "",
-  checkInDate: "",
-  checkInTime: "13:00",
-  checkOutDate: "",
-  checkOutTime: "11:00",
-  guestCount: "",
-  foodIncluded: false,
-  items: [{ id: crypto.randomUUID(), name: "Villa Stay", quantity: 1, pricePerUnit: 0 }],
-  amountReceived: 0,
-  securityDeposit: 0,
-  policies: DEFAULT_POLICIES,
-  businessName: profile.business_name,
-  businessPhone: profile.business_phone,
-};
+  const defaultValues: InvoiceSchema = {
+    ...baseDefaults,
+    invoiceNumber: generateInvoiceNumber(),
+    businessName: profile.business_name,
+    businessPhone: profile.business_phone,
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -118,15 +102,17 @@ export default function NewInvoicePage() {
       <div className="lg:hidden flex border-b border-gray-200 bg-white">
         <button
           onClick={() => setMobileTab("form")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "form" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
-            }`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            mobileTab === "form" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
+          }`}
         >
           <FileText size={16} /> Fill Details
         </button>
         <button
           onClick={() => setMobileTab("preview")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "preview" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
-            }`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            mobileTab === "preview" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
+          }`}
         >
           <Eye size={16} /> Preview
         </button>

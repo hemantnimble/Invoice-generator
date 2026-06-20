@@ -9,13 +9,15 @@ import { DEFAULT_POLICIES } from "@/lib/default-policies";
 import { format } from "date-fns";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ColorThemeSelector from "./ColorThemeSelector";
+import type { ColorThemeId } from "@/lib/color-themes";
 
 type Props = {
   onChange: (data: InvoiceSchema) => void;
   defaultValues?: InvoiceSchema;
 };
 
-const baseDefaults: InvoiceSchema = {
+export const baseDefaults: InvoiceSchema = {
   clientName: "",
   clientContact: "",
   invoiceNumber: generateInvoiceNumber(),
@@ -33,6 +35,7 @@ const baseDefaults: InvoiceSchema = {
   policies: DEFAULT_POLICIES,
   businessName: "Villas Rental",
   businessPhone: "8999130727",
+  colorTheme: "indigo",
 };
 
 export default function InvoiceForm({ onChange, defaultValues }: Props) {
@@ -40,6 +43,7 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
     register,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<InvoiceSchema>({
     resolver: zodResolver(invoiceSchema),
@@ -62,6 +66,14 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
   return (
     <div className="bg-white rounded-2xl shadow p-6 space-y-6">
       <h2 className="text-lg font-bold text-gray-800">Invoice Details</h2>
+
+      {/* Color Theme */}
+      <Section title="Invoice Color">
+        <ColorThemeSelector
+          value={(watch("colorTheme") as ColorThemeId) || "indigo"}
+          onChange={(theme) => setValue("colorTheme", theme, { shouldDirty: true })}
+        />
+      </Section>
 
       {/* Business Info */}
       <Section title="Your Business">
@@ -280,6 +292,3 @@ function Field({
 
 const inputClass =
   "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition placeholder:text-gray-300";
-
-
-export { baseDefaults };  

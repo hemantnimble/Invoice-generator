@@ -13,7 +13,6 @@ export const invoiceSchema = z.object({
   invoiceNumber: z.string().min(1, "Invoice number is required"),
   invoiceDate: z.string().min(1, "Date is required"),
 
-  // Villa booking details
   villaName: z.string().optional(),
   checkInDate: z.string().optional(),
   checkInTime: z.string().optional(),
@@ -30,6 +29,7 @@ export const invoiceSchema = z.object({
 
   businessName: z.string().optional(),
   businessPhone: z.string().optional(),
+  colorTheme: z.enum(["indigo", "green", "orange", "black"]),
 });
 
 export type InvoiceSchema = z.infer<typeof invoiceSchema>;
