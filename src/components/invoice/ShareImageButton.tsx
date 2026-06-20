@@ -3,17 +3,23 @@
 import { useState } from "react";
 import { toPng } from "html-to-image";
 import { MessageCircle, Loader2 } from "lucide-react";
+import { autoSaveInvoice } from "@/lib/auto-save-invoice";
+import type { InvoiceSchema } from "@/lib/invoice-schema";
 
 type Props = {
   targetId: string;
   fileName: string;
   clientPhone: string;
+  data?: InvoiceSchema;
+  autoSave?: boolean;
 };
 
 export default function ShareImageButton({
   targetId,
   fileName,
   clientPhone,
+  data,
+  autoSave,
 }: Props) {
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +37,10 @@ export default function ShareImageButton({
     if (!clientPhone) return;
     setLoading(true);
     try {
+      if (autoSave && data) {
+        autoSaveInvoice(data); // fire and forget
+      }
+
       const node = document.getElementById(targetId);
       if (!node) return;
 
@@ -40,15 +50,12 @@ export default function ShareImageButton({
         backgroundColor: "#ffffff",
       });
 
-      // Silently download the image
       const a = document.createElement("a");
       a.href = dataUrl;
       a.download = `${fileName}.png`;
       a.click();
 
       const phone = cleanPhone(clientPhone);
-
-      // Open directly into that customer's chat, no text prefilled
       const waUrl = `https://wa.me/${phone}`;
 
       setTimeout(() => {

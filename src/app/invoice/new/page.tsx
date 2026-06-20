@@ -127,11 +127,13 @@ export default function NewInvoicePage() {
             <div className="overflow-x-auto">
               <InvoicePreview data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} />
             </div>
-            <DownloadButton data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} />
+            <DownloadButton data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} autoSave />
             <ShareImageButton
               targetId="invoice-preview"
               fileName={`invoice-${(invoiceData ?? defaultValues).invoiceNumber}`}
               clientPhone={(invoiceData ?? defaultValues).clientContact}
+              data={invoiceData ?? defaultValues}
+              autoSave
             />
           </div>
         </div>

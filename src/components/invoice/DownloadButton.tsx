@@ -4,21 +4,29 @@ import { useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import InvoicePDF from "./InvoicePDF";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
+import { autoSaveInvoice } from "@/lib/auto-save-invoice";
 import { Download } from "lucide-react";
 
 type Props = {
   data: InvoiceSchema;
   logoUrl?: string | null;
   signatureUrl?: string | null;
+  autoSave?: boolean;
 };
 
-export default function DownloadButton({ data, logoUrl, signatureUrl }: Props) {
+export default function DownloadButton({ data, logoUrl, signatureUrl, autoSave }: Props) {
   const [loading, setLoading] = useState(false);
 
   const handleDownload = async () => {
     setLoading(true);
     try {
-      const blob = await pdf(<InvoicePDF data={data} logoUrl={logoUrl} signatureUrl={signatureUrl} />).toBlob();
+      if (autoSave) {
+        autoSaveInvoice(data); // fire and forget, don't block download
+      }
+
+      const blob = await pdf(
+        <InvoicePDF data={data} logoUrl={logoUrl} signatureUrl={signatureUrl} />
+      ).toBlob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
