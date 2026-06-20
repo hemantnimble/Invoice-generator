@@ -1,7 +1,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { Chrome } from "lucide-react";
+import { LogIn } from "lucide-react";
 import Link from "next/link";
 export default function LoginPage() {
   return (
@@ -21,7 +21,7 @@ export default function LoginPage() {
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
           className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl py-3 px-4 font-medium text-gray-700 hover:bg-gray-50 transition"
         >
-          <Chrome size={18} />
+          <LogIn size={18} />
           Continue with Google
         </button>
 
