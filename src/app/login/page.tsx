@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { Chrome } from "lucide-react";
-
+import Link from "next/link";
 export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -27,9 +27,9 @@ export default function LoginPage() {
 
         <p className="text-xs text-gray-400">
           Free invoices without login are still available{" "}
-          <a href="/" className="text-indigo-600 underline">
+          <Link href="/" className="text-indigo-600 underline">
             here
-          </a>
+          </Link>
         </p>
       </div>
     </main>
