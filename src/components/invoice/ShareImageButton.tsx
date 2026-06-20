@@ -8,27 +8,17 @@ type Props = {
   targetId: string;
   fileName: string;
   clientPhone: string;
-  clientName?: string;
-  businessName?: string;
-  totalAmount?: string;
-  balanceAmount?: string;
 };
 
 export default function ShareImageButton({
   targetId,
   fileName,
   clientPhone,
-  clientName,
-  businessName,
-  totalAmount,
-  balanceAmount,
 }: Props) {
   const [loading, setLoading] = useState(false);
 
   const cleanPhone = (phone: string) => {
-    // Strip spaces, dashes, keep only digits and leading +
     let digits = phone.replace(/[^\d+]/g, "");
-    // If no country code, assume India (+91)
     if (!digits.startsWith("+")) {
       digits = digits.length === 10 ? `91${digits}` : digits;
     } else {
@@ -38,6 +28,7 @@ export default function ShareImageButton({
   };
 
   const handleShare = async () => {
+    if (!clientPhone) return;
     setLoading(true);
     try {
       const node = document.getElementById(targetId);
@@ -49,36 +40,20 @@ export default function ShareImageButton({
         backgroundColor: "#ffffff",
       });
 
-      const res = await fetch(dataUrl);
-      const blob = await res.blob();
-      const file = new File([blob], `${fileName}.png`, { type: "image/png" });
-
-      const phone = cleanPhone(clientPhone);
-      const message = `Hi ${clientName || "there"}, here's your invoice from ${
-        businessName || "us"
-      }.${totalAmount ? ` Total: ₹${totalAmount}.` : ""}${
-        balanceAmount ? ` Balance due: ₹${balanceAmount}.` : ""
-      }`;
-
-      // Try native share targeted — opens share sheet, user picks WhatsApp
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          text: message,
-        });
-        return;
-      }
-
-      // Fallback — download image + open WhatsApp chat with that number
-      const url = URL.createObjectURL(blob);
+      // Silently download the image
       const a = document.createElement("a");
-      a.href = url;
+      a.href = dataUrl;
       a.download = `${fileName}.png`;
       a.click();
-      URL.revokeObjectURL(url);
 
-      const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-      window.open(waUrl, "_blank");
+      const phone = cleanPhone(clientPhone);
+
+      // Open directly into that customer's chat, no text prefilled
+      const waUrl = `https://wa.me/${phone}`;
+
+      setTimeout(() => {
+        window.open(waUrl, "_blank");
+      }, 400);
     } catch (err) {
       console.error("Share failed:", err);
     } finally {

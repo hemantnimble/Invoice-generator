@@ -135,10 +135,6 @@ export default function NewInvoicePage() {
               targetId="invoice-preview"
               fileName={`invoice-${(invoiceData ?? defaultValues).invoiceNumber}`}
               clientPhone={(invoiceData ?? defaultValues).clientContact}
-              clientName={(invoiceData ?? defaultValues).clientName}
-              businessName={(invoiceData ?? defaultValues).businessName}
-              totalAmount={computeInvoice(invoiceData ?? defaultValues).total.toFixed(2)}
-              balanceAmount={computeInvoice(invoiceData ?? defaultValues).balance.toFixed(2)}
             />
           </div>
         </div>

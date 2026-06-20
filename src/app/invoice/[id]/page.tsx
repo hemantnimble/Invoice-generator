@@ -89,10 +89,6 @@ export default function ViewInvoicePage() {
           targetId="invoice-preview"
           fileName={`invoice-${invoiceData.invoiceNumber}`}
           clientPhone={invoiceData.clientContact}
-          clientName={invoiceData.clientName}
-          businessName={invoiceData.businessName}
-          totalAmount={computeInvoice(invoiceData).total.toFixed(2)}
-          balanceAmount={computeInvoice(invoiceData).balance.toFixed(2)}
         />
       </div>
     </main>

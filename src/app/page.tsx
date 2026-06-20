@@ -48,21 +48,19 @@ export default function Home() {
       <div className="lg:hidden flex border-b border-gray-200 bg-white">
         <button
           onClick={() => setMobileTab("form")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
-            mobileTab === "form"
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "form"
               ? "text-indigo-600 border-b-2 border-indigo-600"
               : "text-gray-500"
-          }`}
+            }`}
         >
           <FileText size={16} /> Fill Details
         </button>
         <button
           onClick={() => setMobileTab("preview")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
-            mobileTab === "preview"
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "preview"
               ? "text-indigo-600 border-b-2 border-indigo-600"
               : "text-gray-500"
-          }`}
+            }`}
         >
           <Eye size={16} /> Preview
         </button>
@@ -87,14 +85,10 @@ export default function Home() {
             <InvoicePreview data={invoiceData} />
             <DownloadButton data={invoiceData} />
             <ShareImageButton
-  targetId="invoice-preview"
-  fileName={`invoice-${invoiceData.invoiceNumber}`}
-  clientPhone={invoiceData.clientContact}
-  clientName={invoiceData.clientName}
-  businessName={invoiceData.businessName}
-  totalAmount={computeInvoice(invoiceData).total.toFixed(2)}
-  balanceAmount={computeInvoice(invoiceData).balance.toFixed(2)}
-/>
+              targetId="invoice-preview"
+              fileName={`invoice-${invoiceData.invoiceNumber}`}
+              clientPhone={invoiceData.clientContact}
+            />
           </div>
         </div>
       </div>
