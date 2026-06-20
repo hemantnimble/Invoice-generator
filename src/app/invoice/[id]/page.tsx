@@ -63,6 +63,7 @@ export default function ViewInvoicePage() {
     amountReceived: invoice.amount_received,
     businessName: profile?.business_name,
     businessPhone: profile?.business_phone,
+    colorTheme: "indigo",
   };
 
   return (
