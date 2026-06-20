@@ -86,7 +86,7 @@ export default function SettingsPage() {
     if (!profile) return null;
 
     return (
-        <main className="min-h-screen bg-gray-50 px-4 py-8">
+       <main className="min-h-screen bg-gray-50 px-4 py-8 pb-20 lg:pb-0">
             <div className="max-w-xl mx-auto space-y-6">
                 <div>
                     <h1 className="text-xl font-bold text-gray-900">Business Settings</h1>

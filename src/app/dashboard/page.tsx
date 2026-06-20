@@ -45,7 +45,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8">
+    <main className="min-h-screen bg-gray-50 px-4 py-8 pb-20 lg:pb-0">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -133,9 +133,8 @@ function StatusBadge({ status }: { status: string }) {
   };
   return (
     <span
-      className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
-        styles[status as keyof typeof styles] || styles.unpaid
-      }`}
+      className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${styles[status as keyof typeof styles] || styles.unpaid
+        }`}
     >
       {status}
     </span>

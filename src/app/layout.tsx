@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
+import BottomNav from "@/components/BottomNav";
 
 export const viewport: Viewport = {
   themeColor: "#6366f1",
@@ -35,7 +36,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="antialiased">
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>{children}<BottomNav /></SessionProvider>
       </body>
     </html>
   );
