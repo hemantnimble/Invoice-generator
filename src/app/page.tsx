@@ -6,10 +6,11 @@ import InvoicePreview from "@/components/invoice/InvoicePreview";
 import DownloadButton from "@/components/invoice/DownloadButton";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
-import { generateInvoiceNumber } from "@/lib/invoice-utils";
+import { computeInvoice, generateInvoiceNumber } from "@/lib/invoice-utils";
 import { format } from "date-fns";
 import { FileText, Eye } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import ShareImageButton from "@/components/invoice/ShareImageButton";
 
 const defaultValues: InvoiceSchema = {
   clientName: "",
@@ -85,6 +86,15 @@ export default function Home() {
           <div className="lg:sticky lg:top-24 space-y-4">
             <InvoicePreview data={invoiceData} />
             <DownloadButton data={invoiceData} />
+            <ShareImageButton
+  targetId="invoice-preview"
+  fileName={`invoice-${invoiceData.invoiceNumber}`}
+  clientPhone={invoiceData.clientContact}
+  clientName={invoiceData.clientName}
+  businessName={invoiceData.businessName}
+  totalAmount={computeInvoice(invoiceData).total.toFixed(2)}
+  balanceAmount={computeInvoice(invoiceData).balance.toFixed(2)}
+/>
           </div>
         </div>
       </div>

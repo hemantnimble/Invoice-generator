@@ -12,6 +12,7 @@ import { computeInvoice, generateInvoiceNumber } from "@/lib/invoice-utils";
 import { format } from "date-fns";
 import { ArrowLeft, FileText, Eye, Save, Loader2, Check } from "lucide-react";
 import type { Profile } from "@/types/database";
+import ShareImageButton from "@/components/invoice/ShareImageButton";
 
 export default function NewInvoicePage() {
   const { status } = useSession();
@@ -106,17 +107,15 @@ export default function NewInvoicePage() {
       <div className="lg:hidden flex border-b border-gray-200 bg-white">
         <button
           onClick={() => setMobileTab("form")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
-            mobileTab === "form" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "form" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
+            }`}
         >
           <FileText size={16} /> Fill Details
         </button>
         <button
           onClick={() => setMobileTab("preview")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
-            mobileTab === "preview" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
-          }`}
+          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "preview" ? "text-indigo-600 border-b-2 border-indigo-600" : "text-gray-500"
+            }`}
         >
           <Eye size={16} /> Preview
         </button>
@@ -132,6 +131,15 @@ export default function NewInvoicePage() {
           <div className="lg:sticky lg:top-24 space-y-4">
             <InvoicePreview data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} />
             <DownloadButton data={invoiceData ?? defaultValues} logoUrl={profile.logo_url} signatureUrl={profile.signature_url} />
+            <ShareImageButton
+              targetId="invoice-preview"
+              fileName={`invoice-${(invoiceData ?? defaultValues).invoiceNumber}`}
+              clientPhone={(invoiceData ?? defaultValues).clientContact}
+              clientName={(invoiceData ?? defaultValues).clientName}
+              businessName={(invoiceData ?? defaultValues).businessName}
+              totalAmount={computeInvoice(invoiceData ?? defaultValues).total.toFixed(2)}
+              balanceAmount={computeInvoice(invoiceData ?? defaultValues).balance.toFixed(2)}
+            />
           </div>
         </div>
       </div>
