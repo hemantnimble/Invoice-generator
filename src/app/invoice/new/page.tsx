@@ -73,7 +73,7 @@ export default function NewInvoicePage() {
   };
 
   return (
-   <main className="min-h-screen bg-gray-50 pb-20 lg:pb-0">
+    <main className="min-h-screen bg-gray-50 pb-20 lg:pb-0">
       {/* Top Bar */}
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
         <div className="flex items-center gap-3">
@@ -119,7 +119,7 @@ export default function NewInvoicePage() {
       {/* Layout */}
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className={`space-y-4 ${mobileTab === "preview" ? "hidden lg:block" : ""}`}>
-          <InvoiceForm onChange={handleChange} defaultValues={defaultValues} />
+          <InvoiceForm onChange={handleChange} defaultValues={defaultValues} hideBusinessFields />
         </div>
 
         <div className={`space-y-4 ${mobileTab === "form" ? "hidden lg:block" : ""}`}>

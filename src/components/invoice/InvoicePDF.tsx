@@ -143,9 +143,10 @@ export default function InvoicePDF({ data, logoUrl, signatureUrl }: Props) {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.businessName}>{invoice.businessName || "Villas Rental"}</Text>
-            <Text style={styles.businessSub}>Lonavala</Text>
-            <Text style={styles.businessSub}>Phone no.: {invoice.businessPhone || "—"}</Text>
+            <Text style={styles.businessName}>{invoice.businessName || "Your Business Name"}</Text>
+            {invoice.businessPhone && (
+              <Text style={styles.businessSub}>Phone no.: {invoice.businessPhone}</Text>
+            )}
           </View>
           <View style={styles.logoBox}>
             {logoUrl ? (
@@ -240,7 +241,7 @@ export default function InvoicePDF({ data, logoUrl, signatureUrl }: Props) {
 
         {/* Signature */}
         <View style={styles.signatureSection}>
-          <Text style={styles.signatureFor}>For: {invoice.businessName || "Villas Rental"}</Text>
+          <Text style={styles.signatureFor}>For: {invoice.businessName || "Your Business"}</Text>
           {signatureUrl ? (
             <Image src={signatureUrl} style={{ width: 120, height: 50, marginTop: 12, marginBottom: 4 }} />
           ) : (

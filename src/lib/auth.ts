@@ -38,9 +38,9 @@ export const authOptions: NextAuthOptions = {
       if (!existing) {
         await supabaseAdmin.from("profiles").insert({
           user_id: user.id,
-          business_name: "Villas Rental",
+          business_name: user.name || "",
           business_phone: "",
-          business_address: "Lonavala",
+          business_address: "",
         });
       }
 

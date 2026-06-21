@@ -1,29 +1,17 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import InvoiceForm from "@/components/invoice/InvoiceForm";
-import InvoicePreview from "@/components/invoice/InvoicePreview";
-import DownloadButton from "@/components/invoice/DownloadButton";
-import PWAInstallBanner from "@/components/PWAInstallBanner";
-import type { InvoiceSchema } from "@/lib/invoice-schema";
-import { FileText, Eye } from "lucide-react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import ShareImageButton from "@/components/invoice/ShareImageButton";
-import { baseDefaults } from "@/components/invoice/InvoiceForm";
+import Link from "next/link";
+import PWAInstallBanner from "@/components/PWAInstallBanner";
+import { FileText, PlusCircle, LogIn, LayoutDashboard } from "lucide-react";
 
-
-export default function Home() {
-  const [invoiceData, setInvoiceData] = useState<InvoiceSchema>(baseDefaults);
-  const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
-
-  const handleChange = useCallback((data: InvoiceSchema) => {
-    setInvoiceData(data);
-  }, []);
+export default function LandingPage() {
+  const { data: session, status } = useSession();
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-20 lg:pb-0">
+    <main className="min-h-screen bg-gray-50 pb-20 lg:pb-0 flex flex-col">
       {/* Top Bar */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
             <span className="text-white text-xs font-bold">VI</span>
@@ -33,63 +21,67 @@ export default function Home() {
         <AuthButton />
       </header>
 
-      {/* Mobile Tab Switcher */}
-      <div className="lg:hidden flex border-b border-gray-200 bg-white">
-        <button
-          onClick={() => setMobileTab("form")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "form"
-            ? "text-indigo-600 border-b-2 border-indigo-600"
-            : "text-gray-500"
-            }`}
-        >
-          <FileText size={16} /> Fill Details
-        </button>
-        <button
-          onClick={() => setMobileTab("preview")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${mobileTab === "preview"
-            ? "text-indigo-600 border-b-2 border-indigo-600"
-            : "text-gray-500"
-            }`}
-        >
-          <Eye size={16} /> Preview
-        </button>
+      {/* Hero */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          {session ? `Welcome back, ${session.user?.name?.split(" ")[0]}` : "Villa Booking Invoices"}
+        </h2>
+        <p className="text-sm text-gray-500 mb-8 max-w-sm">
+          {session
+            ? "Create a saved invoice with your business profile, or use the quick free generator."
+            : "Generate professional villa booking invoices instantly — free, no login required."}
+        </p>
+
+        <div className="w-full max-w-sm space-y-3">
+          {session ? (
+            <>
+              <Link
+                href="/invoice/new"
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-6 rounded-xl transition shadow-md"
+              >
+                <PlusCircle size={18} />
+                New Invoice (saved to account)
+              </Link>
+              <Link
+                href="/dashboard"
+                className="w-full flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium py-3.5 px-6 rounded-xl transition"
+              >
+                <LayoutDashboard size={18} />
+                Go to Dashboard
+              </Link>
+              <Link
+                href="/invoice/free"
+                className="w-full flex items-center justify-center gap-2 text-gray-400 hover:text-gray-600 font-medium py-2.5 px-6 rounded-xl transition text-sm"
+              >
+                <FileText size={16} />
+                Quick free invoice (not saved)
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/invoice/free"
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-6 rounded-xl transition shadow-md"
+              >
+                <FileText size={18} />
+                Create Free Invoice
+              </Link>
+              <button
+                onClick={() => signIn("google")}
+                className="w-full flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-medium py-3.5 px-6 rounded-xl transition"
+              >
+                <LogIn size={18} />
+                Sign In to Save Invoices
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* Layout */}
-      <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Left — Form */}
-        <div className={`space-y-4 ${mobileTab === "preview" ? "hidden lg:block" : ""}`}>
-          <p className="text-sm text-gray-500 font-medium hidden lg:block">
-            Fill Invoice Details
-          </p>
-          <InvoiceForm onChange={handleChange} />
-        </div>
-
-        {/* Right — Preview */}
-        <div className={`space-y-4 ${mobileTab === "form" ? "hidden lg:block" : ""}`}>
-          <p className="text-sm text-gray-500 font-medium hidden lg:block">
-            Live Preview
-          </p>
-          <div className="lg:sticky lg:top-24 space-y-4">
-            <div className="overflow-x-auto">
-              <InvoicePreview data={invoiceData} />
-            </div>
-            <DownloadButton data={invoiceData} />
-            <ShareImageButton
-              targetId="invoice-preview"
-              fileName={`invoice-${invoiceData.invoiceNumber}`}
-              clientPhone={invoiceData.clientContact}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* PWA Install Banner */}
       <PWAInstallBanner />
     </main>
   );
 }
-
 
 function AuthButton() {
   const { data: session, status } = useSession();
@@ -100,17 +92,12 @@ function AuthButton() {
 
   if (session) {
     return (
-      <div className="flex items-center gap-2">
-        <a href="/dashboard" className="text-xs text-indigo-600 font-medium hover:underline">
-          Dashboard
-        </a>
-        <button
-          onClick={() => signOut({ callbackUrl: "/" })}
-          className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition"
-        >
-          Sign Out
-        </button>
-      </div>
+      <button
+        onClick={() => signOut({ callbackUrl: "/" })}
+        className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition"
+      >
+        Sign Out
+      </button>
     );
   }
 

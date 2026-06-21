@@ -15,8 +15,8 @@ import type { ColorThemeId } from "@/lib/color-themes";
 type Props = {
   onChange: (data: InvoiceSchema) => void;
   defaultValues?: InvoiceSchema;
+  hideBusinessFields?: boolean;
 };
-
 export const baseDefaults: InvoiceSchema = {
   clientName: "",
   clientContact: "",
@@ -33,12 +33,12 @@ export const baseDefaults: InvoiceSchema = {
   amountReceived: 0,
   securityDeposit: 0,
   policies: DEFAULT_POLICIES,
-  businessName: "Villas Rental",
-  businessPhone: "8999130727",
+  businessName: "",
+  businessPhone: "",
   colorTheme: "indigo",
 };
 
-export default function InvoiceForm({ onChange, defaultValues }: Props) {
+export default function InvoiceForm({ onChange, defaultValues, hideBusinessFields }: Props) {
   const {
     register,
     control,
@@ -76,16 +76,18 @@ export default function InvoiceForm({ onChange, defaultValues }: Props) {
       </Section>
 
       {/* Business Info */}
-      <Section title="Your Business">
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Business Name" error={errors.businessName?.message}>
-            <input {...register("businessName")} placeholder="Villas Rental" className={inputClass} />
-          </Field>
-          <Field label="Phone" error={errors.businessPhone?.message}>
-            <input {...register("businessPhone")} placeholder="8999130727" className={inputClass} />
-          </Field>
-        </div>
-      </Section>
+      {!hideBusinessFields && (
+        <Section title="Your Business">
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Business Name" error={errors.businessName?.message}>
+              <input {...register("businessName")} placeholder="Your business name" className={inputClass} />
+            </Field>
+            <Field label="Phone" error={errors.businessPhone?.message}>
+              <input {...register("businessPhone")} placeholder="Your phone number" className={inputClass} />
+            </Field>
+          </div>
+        </Section>
+      )}
 
       {/* Bill To */}
       <Section title="Bill To">

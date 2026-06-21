@@ -37,12 +37,13 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
       <div className="flex justify-between items-start mb-6 pb-4 border-b-2 border-gray-200">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            {invoice.businessName || "Villas Rental"}
+            {invoice.businessName || "Your Business Name"}
           </h1>
-          <p className="text-sm text-gray-500 mt-1">Lonavala</p>
-          <p className="text-sm text-gray-500">
-            Phone no.: {invoice.businessPhone || "—"}
-          </p>
+          {invoice.businessPhone && (
+            <p className="text-sm text-gray-500 mt-1">
+              Phone no.: {invoice.businessPhone}
+            </p>
+          )}
         </div>
         {logoUrl && (
           <div className="w-16 h-16 rounded-full border-2 border-gray-300 flex items-center justify-center overflow-hidden shrink-0">
@@ -205,7 +206,7 @@ export default function InvoicePreview({ data, logoUrl, signatureUrl }: Props) {
 
       {/* Signature */}
       <div className="mt-10 text-right text-sm text-gray-600">
-        <p>For: {invoice.businessName || "Villas Rental"}</p>
+        <p>For: {invoice.businessName || "Your Business"}</p>
         {signatureUrl && (
           <div className="mt-8 mb-2 ml-auto" style={{ width: 160, height: 60 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
