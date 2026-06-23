@@ -5,28 +5,35 @@ export type LineItem = {
   pricePerUnit: number;
 };
 
+export type RentalType = "villa" | "hotel" | "cottage" | "camping";
+
 export type InvoiceFormData = {
+  rentalType: RentalType;
   clientName: string;
   clientContact: string;
-
   invoiceNumber: string;
   invoiceDate: string;
 
-  villaName?: string;
+  // Shared booking
+  propertyName?: string;
   checkInDate?: string;
   checkInTime?: string;
   checkOutDate?: string;
   checkOutTime?: string;
   guestCount?: string;
   foodIncluded?: boolean;
-
-  items: LineItem[];
-
-  amountReceived: number;
   securityDeposit?: number;
 
-  policies?: string;
+  // Hotel specific
+  roomNumber?: string;
+  roomType?: string;
 
+  // Camping specific
+  tentType?: string;
+
+  items: LineItem[];
+  amountReceived: number;
+  policies?: string;
   businessName?: string;
   businessPhone?: string;
   colorTheme?: "navy" | "green" | "orange" | "black";

@@ -21,6 +21,7 @@ export type InvoiceRecord = {
   total: number;
   amount_received: number;
   balance: number;
+  rental_type: string;
   status: "paid" | "unpaid" | "partial";
   created_at: string;
 };

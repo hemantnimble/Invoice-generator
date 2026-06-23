@@ -93,6 +93,11 @@ export default function DashboardPage() {
             >
               <div>
                 <div className="flex items-center gap-2">
+                  <span className="text-base">
+                    {inv.rental_type === "hotel" ? "🏨" :
+                      inv.rental_type === "cottage" ? "🛖" :
+                        inv.rental_type === "camping" ? "⛺" : "🏡"}
+                  </span>
                   <p className="font-semibold text-gray-900">{inv.client_name}</p>
                   <StatusBadge status={inv.status} />
                 </div>

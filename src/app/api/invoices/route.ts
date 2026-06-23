@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
     total: body.total,
     amount_received: body.amountReceived,
     balance: body.balance,
+    rental_type: body.rentalType ?? "villa",
     status: body.balance <= 0 ? "paid" : body.amountReceived > 0 ? "partial" : "unpaid",
   };
 

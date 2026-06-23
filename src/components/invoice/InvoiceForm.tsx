@@ -5,34 +5,41 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { invoiceSchema, type InvoiceSchema } from "@/lib/invoice-schema";
 import { generateInvoiceNumber } from "@/lib/invoice-utils";
-import { DEFAULT_POLICIES } from "@/lib/default-policies";
+import { getRentalType, RENTAL_TYPES } from "@/lib/rental-types";
 import { format } from "date-fns";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ColorThemeSelector from "./ColorThemeSelector";
+import RentalTypeSelector from "./RentalTypeSelector";
 import type { ColorThemeId } from "@/lib/color-themes";
+import type { RentalType } from "@/lib/rental-types";
 
 type Props = {
   onChange: (data: InvoiceSchema) => void;
   defaultValues?: InvoiceSchema;
   hideBusinessFields?: boolean;
 };
+
 export const baseDefaults: InvoiceSchema = {
+  rentalType: "villa",
   clientName: "",
   clientContact: "",
   invoiceNumber: generateInvoiceNumber(),
   invoiceDate: format(new Date(), "yyyy-MM-dd"),
-  villaName: "",
+  propertyName: "",
   checkInDate: "",
   checkInTime: "13:00",
   checkOutDate: "",
   checkOutTime: "11:00",
   guestCount: "",
   foodIncluded: false,
-  items: [{ id: crypto.randomUUID(), name: "Villa Stay", quantity: 1, pricePerUnit: 0 }],
-  amountReceived: 0,
   securityDeposit: 0,
-  policies: DEFAULT_POLICIES,
+  roomNumber: "",
+  roomType: "",
+  tentType: "",
+  items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
+  amountReceived: 0,
+  policies: RENTAL_TYPES[0].defaultPolicies,
   businessName: "",
   businessPhone: "",
   colorTheme: "navy",
@@ -51,10 +58,17 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
     mode: "onChange",
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "items",
-  });
+  const { fields, append, remove } = useFieldArray({ control, name: "items" });
+
+  const rentalType = watch("rentalType");
+  const rentalConfig = getRentalType(rentalType || "villa");
+
+  // When rental type changes — update policies and default item name
+  useEffect(() => {
+    const config = getRentalType(rentalType);
+    setValue("policies", config.defaultPolicies);
+    setValue("items.0.name", config.defaultItem);
+  }, [rentalType, setValue]);
 
   useEffect(() => {
     const sub = watch((value) => {
@@ -67,23 +81,39 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
     <div className="bg-white rounded-2xl shadow p-6 space-y-6">
       <h2 className="text-lg font-bold text-gray-800">Invoice Details</h2>
 
+      {/* Rental Type */}
+      <Section title="Rental Type">
+        <RentalTypeSelector
+          value={(watch("rentalType") as RentalType) || "villa"}
+          onChange={(type) => setValue("rentalType", type, { shouldDirty: true })}
+        />
+      </Section>
+
       {/* Color Theme */}
       <Section title="Invoice Color">
         <ColorThemeSelector
-          value={(watch("colorTheme") as ColorThemeId) || "indigo"}
+          value={(watch("colorTheme") as ColorThemeId) || "navy"}
           onChange={(theme) => setValue("colorTheme", theme, { shouldDirty: true })}
         />
       </Section>
 
-      {/* Business Info */}
+      {/* Business Info — only for free/non-logged flow */}
       {!hideBusinessFields && (
         <Section title="Your Business">
           <div className="grid grid-cols-2 gap-4">
             <Field label="Business Name" error={errors.businessName?.message}>
-              <input {...register("businessName")} placeholder="Your business name" className={inputClass} />
+              <input
+                {...register("businessName")}
+                placeholder="Your business name"
+                className={inputClass}
+              />
             </Field>
             <Field label="Phone" error={errors.businessPhone?.message}>
-              <input {...register("businessPhone")} placeholder="Your phone number" className={inputClass} />
+              <input
+                {...register("businessPhone")}
+                placeholder="Your phone number"
+                className={inputClass}
+              />
             </Field>
           </div>
         </Section>
@@ -93,10 +123,18 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
       <Section title="Bill To">
         <div className="grid grid-cols-2 gap-4">
           <Field label="Client Name *" error={errors.clientName?.message}>
-            <input {...register("clientName")} placeholder="Client name" className={inputClass} />
+            <input
+              {...register("clientName")}
+              placeholder="Client name"
+              className={inputClass}
+            />
           </Field>
           <Field label="Contact *" error={errors.clientContact?.message}>
-            <input {...register("clientContact")} placeholder="Phone / UPI / ID" className={inputClass} />
+            <input
+              {...register("clientContact")}
+              placeholder="Phone / UPI / ID"
+              className={inputClass}
+            />
           </Field>
         </div>
       </Section>
@@ -113,16 +151,47 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
         </div>
       </Section>
 
-      {/* Villa Booking Details */}
-      <Section title="Booking Details">
+      {/* Booking Details */}
+      <Section title={`${rentalConfig.emoji} ${rentalConfig.label} Details`}>
         <div className="space-y-4">
-          <Field label="Villa Name">
+          <Field label={rentalConfig.propertyLabel}>
             <input
-              {...register("villaName")}
-              placeholder="e.g. CAPSTONE VILLA (3 BHK)"
+              {...register("propertyName")}
+              placeholder={`e.g. ${rentalConfig.label} name`}
               className={inputClass}
             />
           </Field>
+
+          {/* Hotel specific */}
+          {rentalType === "hotel" && (
+            <div className="grid grid-cols-2 gap-4">
+              <Field label="Room Number">
+                <input
+                  {...register("roomNumber")}
+                  placeholder="e.g. 101"
+                  className={inputClass}
+                />
+              </Field>
+              <Field label="Room Type">
+                <input
+                  {...register("roomType")}
+                  placeholder="e.g. Deluxe, Suite"
+                  className={inputClass}
+                />
+              </Field>
+            </div>
+          )}
+
+          {/* Camping specific */}
+          {rentalType === "camping" && (
+            <Field label="Tent / Cabin Type">
+              <input
+                {...register("tentType")}
+                placeholder="e.g. Swiss Tent, Wooden Cabin"
+                className={inputClass}
+              />
+            </Field>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <Field label="Check-in Date">
@@ -146,7 +215,7 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
             <Field label="Guests">
               <input
                 {...register("guestCount")}
-                placeholder="e.g. 9 Adults"
+                placeholder="e.g. 4 Adults, 2 Kids"
                 className={inputClass}
               />
             </Field>
@@ -154,19 +223,19 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
               <input
                 type="checkbox"
                 {...register("foodIncluded")}
-                className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-400"
+                className="w-4 h-4 rounded border-gray-300 focus:ring-[#2D3A8C]"
               />
-              Food Package Included
+              {rentalType === "hotel" ? "Meal Plan Included" : "Food Package Included"}
             </label>
           </div>
         </div>
       </Section>
 
-      {/* Line Items */}
+      {/* Charges */}
       <Section title="Charges">
         <div className="space-y-3">
           <div className="grid grid-cols-12 gap-2 text-xs font-semibold text-gray-500 uppercase px-1">
-            <span className="col-span-5">Item Name</span>
+            <span className="col-span-5">Item</span>
             <span className="col-span-2 text-center">Qty</span>
             <span className="col-span-3 text-right">Price/Unit</span>
             <span className="col-span-2"></span>
@@ -177,7 +246,7 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
               <div className="col-span-5">
                 <input
                   {...register(`items.${index}.name`)}
-                  placeholder="e.g. Villa stay"
+                  placeholder="Charge name"
                   className={cn(inputClass, errors.items?.[index]?.name && "border-red-400")}
                 />
               </div>
@@ -217,7 +286,7 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
             onClick={() =>
               append({ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 })
             }
-            className="flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium mt-1"
+            className="flex items-center gap-1 text-sm text-[#2D3A8C] hover:opacity-70 font-medium mt-1"
           >
             <Plus size={16} /> Add Item
           </button>
@@ -249,7 +318,7 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
       </Section>
 
       {/* Policies */}
-      <Section title="Home Rules / Policies (optional, shown on invoice if filled)">
+      <Section title="Policies (optional — shown on invoice if filled)">
         <textarea
           {...register("policies")}
           rows={8}
@@ -266,7 +335,7 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-indigo-600 uppercase tracking-wide border-b border-indigo-100 pb-1">
+      <h3 className="text-sm font-semibold text-[#2D3A8C] uppercase tracking-wide border-b border-[#eef0fb] pb-1">
         {title}
       </h3>
       {children}
@@ -293,4 +362,4 @@ function Field({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-400 transition placeholder:text-gray-300";
+  "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2D3A8C]/30 focus:border-[#2D3A8C] transition placeholder:text-gray-300";

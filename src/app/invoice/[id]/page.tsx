@@ -55,6 +55,7 @@ export default function ViewInvoicePage() {
 
   // Convert saved record back into the form schema shape
   const invoiceData: InvoiceSchema = {
+    rentalType: (invoice.rental_type as InvoiceSchema["rentalType"]) ?? "villa",
     clientName: invoice.client_name,
     clientContact: invoice.client_contact,
     invoiceNumber: invoice.invoice_number,
