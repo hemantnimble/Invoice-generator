@@ -4,23 +4,23 @@ import SessionProvider from "@/components/SessionProvider";
 import BottomNav from "@/components/BottomNav";
 
 export const viewport: Viewport = {
-  themeColor: "#6366f1",
+  themeColor: "#2D3A8C",
   width: "device-width",
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
-  title: "Villa Invoice — Free Invoice Generator",
-  description: "Generate professional tax invoices for villa rentals instantly. Free, no login required.",
+  title: "RentalInvoice — Free Invoice Generator for Rental Businesses",
+  description: "Generate professional invoices for villas, hotels, cottages and camping instantly. Free, no login required.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Villa Invoice",
+    title: "RentalInvoice",
   },
   openGraph: {
-    title: "Villa Invoice",
-    description: "Free invoice generator for villa rentals",
+    title: "RentalInvoice",
+    description: "Free invoice generator for rental businesses",
     type: "website",
   },
 };
@@ -33,10 +33,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.jpg" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
       </head>
       <body className="antialiased">
-        <SessionProvider>{children}<BottomNav /></SessionProvider>
+        <SessionProvider>
+          {children}
+          <BottomNav />
+        </SessionProvider>
       </body>
     </html>
   );

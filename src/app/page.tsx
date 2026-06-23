@@ -4,6 +4,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
 import { FileText, PlusCircle, LogIn, LayoutDashboard } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
 
 export default function LandingPage() {
   const { data: session, status } = useSession();
@@ -12,24 +13,19 @@ export default function LandingPage() {
     <main className="min-h-screen bg-gray-50 pb-20 lg:pb-0 flex flex-col">
       {/* Top Bar */}
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
-            <span className="text-white text-xs font-bold">VI</span>
-          </div>
-          <h1 className="text-lg font-bold text-gray-900">Villa Invoice</h1>
-        </div>
+        <AppHeader />
         <AuthButton />
       </header>
 
       {/* Hero */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {session ? `Welcome back, ${session.user?.name?.split(" ")[0]}` : "Villa Booking Invoices"}
+          {session ? `Welcome back, ${session.user?.name?.split(" ")[0]}` : "Rental Invoices Made Simple"}
         </h2>
         <p className="text-sm text-gray-500 mb-8 max-w-sm">
           {session
             ? "Create a saved invoice with your business profile, or use the quick free generator."
-            : "Generate professional villa booking invoices instantly — free, no login required."}
+            : "Generate professional invoices for villas, hotels, cottages and camping — free, no login required."}
         </p>
 
         <div className="w-full max-w-sm space-y-3">
@@ -64,7 +60,7 @@ export default function LandingPage() {
                 className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 px-6 rounded-xl transition shadow-md"
               >
                 <FileText size={18} />
-                Create Free Invoice
+                Create Free Invoice (not saved)
               </Link>
               <button
                 onClick={() => signIn("google")}

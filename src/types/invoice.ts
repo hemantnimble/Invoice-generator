@@ -29,7 +29,7 @@ export type InvoiceFormData = {
 
   businessName?: string;
   businessPhone?: string;
-  colorTheme?: "indigo" | "green" | "orange" | "black";
+  colorTheme?: "navy" | "green" | "orange" | "black";
 };
 
 export type InvoiceComputedData = InvoiceFormData & {

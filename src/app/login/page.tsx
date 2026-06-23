@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { signIn } from "next-auth/react";
 import { LogIn } from "lucide-react";
@@ -8,10 +9,14 @@ export default function LoginPage() {
     <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white rounded-2xl shadow p-8 max-w-sm w-full text-center space-y-6">
         <div>
-          <div className="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white text-sm font-bold">VI</span>
-          </div>
-          <h1 className="text-xl font-bold text-gray-900">Sign in to Villa Invoice</h1>
+          <Image
+            src="/icons/icon-192x192.png"
+            alt="RentalInvoice"
+            width={56}
+            height={56}
+            className="rounded-xl mx-auto mb-4"
+          />
+          <h1 className="text-xl font-bold text-gray-900">Sign in to RentalInvoice</h1>
           <p className="text-sm text-gray-500 mt-2">
             Save invoices, upload your logo & signature
           </p>

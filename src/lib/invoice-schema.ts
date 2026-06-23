@@ -29,7 +29,7 @@ export const invoiceSchema = z.object({
 
   businessName: z.string().optional(),
   businessPhone: z.string().optional(),
-  colorTheme: z.enum(["indigo", "green", "orange", "black"]),
+  colorTheme: z.enum(["navy", "green", "orange", "black"]),
 });
 
 export type InvoiceSchema = z.infer<typeof invoiceSchema>;

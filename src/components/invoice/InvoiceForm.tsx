@@ -35,7 +35,7 @@ export const baseDefaults: InvoiceSchema = {
   policies: DEFAULT_POLICIES,
   businessName: "",
   businessPhone: "",
-  colorTheme: "indigo",
+  colorTheme: "navy",
 };
 
 export default function InvoiceForm({ onChange, defaultValues, hideBusinessFields }: Props) {

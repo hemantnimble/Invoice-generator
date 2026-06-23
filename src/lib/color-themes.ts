@@ -1,4 +1,4 @@
-export type ColorThemeId = "indigo" | "green" | "orange" | "black";
+export type ColorThemeId = "navy" | "green" | "orange" | "black";
 
 export type ColorTheme = {
   id: ColorThemeId;
@@ -15,23 +15,23 @@ export type ColorTheme = {
 };
 
 export const COLOR_THEMES: Record<ColorThemeId, ColorTheme> = {
-  indigo: {
-    id: "indigo",
-    name: "Indigo",
-    headerBg: "bg-indigo-400",
-    accentText: "text-indigo-700",
-    accentBg: "bg-indigo-50",
-    swatch: "bg-indigo-500",
-    hex: { header: "#818cf8", accent: "#4338ca", accentLight: "#eef2ff" },
+  navy: {
+    id: "navy",
+    name: "Navy",
+    headerBg: "bg-[#2D3A8C]",
+    accentText: "text-[#2D3A8C]",
+    accentBg: "bg-[#eef0fb]",
+    swatch: "bg-[#2D3A8C]",
+    hex: { header: "#2D3A8C", accent: "#2D3A8C", accentLight: "#eef0fb" },
   },
   green: {
     id: "green",
-    name: "Green",
-    headerBg: "bg-emerald-500",
-    accentText: "text-emerald-700",
-    accentBg: "bg-emerald-50",
-    swatch: "bg-emerald-500",
-    hex: { header: "#10b981", accent: "#047857", accentLight: "#ecfdf5" },
+    name: "Mint",
+    headerBg: "bg-[#4ECBA5]",
+    accentText: "text-[#4ECBA5]",
+    accentBg: "bg-[#edfbf6]",
+    swatch: "bg-[#4ECBA5]",
+    hex: { header: "#4ECBA5", accent: "#3aab87", accentLight: "#edfbf6" },
   },
   orange: {
     id: "orange",
@@ -44,7 +44,7 @@ export const COLOR_THEMES: Record<ColorThemeId, ColorTheme> = {
   },
   black: {
     id: "black",
-    name: "Classic Black",
+    name: "Classic",
     headerBg: "bg-gray-800",
     accentText: "text-gray-800",
     accentBg: "bg-gray-50",
@@ -53,4 +53,4 @@ export const COLOR_THEMES: Record<ColorThemeId, ColorTheme> = {
   },
 };
 
-export const DEFAULT_THEME: ColorThemeId = "indigo";
+export const DEFAULT_THEME: ColorThemeId = "navy";
