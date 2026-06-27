@@ -36,6 +36,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <script src="https://checkout.razorpay.com/v1/checkout.js" async />
       </head>
       <body className="antialiased">
         <SessionProvider>

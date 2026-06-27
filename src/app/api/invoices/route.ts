@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-server";
+import { canUserSaveInvoice } from "@/lib/subscription";
 
-// GET — list all invoices for logged in user
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -23,7 +23,6 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-// POST — create new invoice
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -32,13 +31,24 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  // Check if an invoice with this number already exists for this user
+  // Check if upsert (existing invoice) — don't count against limit
   const { data: existing } = await supabaseAdmin
     .from("invoices")
     .select("id")
     .eq("user_id", session.user.id)
     .eq("invoice_number", body.invoiceNumber)
     .single();
+
+  // Only check limit for NEW invoices
+  if (!existing) {
+    const check = await canUserSaveInvoice(session.user.id);
+    if (!check.allowed) {
+      return NextResponse.json(
+        { error: "free_limit_reached", count: check.count, limit: check.limit },
+        { status: 403 }
+      );
+    }
+  }
 
   const payload = {
     user_id: session.user.id,

@@ -8,7 +8,7 @@ import InvoicePreview from "@/components/invoice/InvoicePreview";
 import DownloadButton from "@/components/invoice/DownloadButton";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
 import { computeInvoice, generateInvoiceNumber } from "@/lib/invoice-utils";
-import { ArrowLeft, FileText, Eye, Save, Loader2, Check } from "lucide-react";
+import { ArrowLeft, FileText, Eye, Save, Loader2, Check, Zap } from "lucide-react";
 import type { Profile } from "@/types/database";
 import ShareImageButton from "@/components/invoice/ShareImageButton";
 import InvoiceForm, { baseDefaults } from "@/components/invoice/InvoiceForm";
@@ -21,6 +21,7 @@ export default function NewInvoicePage() {
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [limitReached, setLimitReached] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
@@ -50,6 +51,11 @@ export default function NewInvoicePage() {
     });
 
     setSaving(false);
+
+    if (res.status === 403) {
+      setLimitReached(true);
+      return;
+    }
 
     if (res.ok) {
       setSaved(true);
@@ -138,6 +144,33 @@ export default function NewInvoicePage() {
           </div>
         </div>
       </div>
+      {limitReached && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-[#eef0fb] rounded-full flex items-center justify-center mx-auto mb-3">
+                <Zap size={22} className="text-[#2D3A8C]" />
+              </div>
+              <h3 className="font-bold text-gray-900">Free limit reached</h3>
+              <p className="text-sm text-gray-500 mt-1">
+                You've used all 5 free saved invoices. Upgrade to Pro for unlimited saves.
+              </p>
+            </div>
+            <Link
+              href="/pricing"
+              className="w-full flex items-center justify-center gap-2 bg-[#2D3A8C] hover:bg-[#232d6e] text-white font-bold py-3 rounded-xl transition text-sm"
+            >
+              <Zap size={16} /> Upgrade to Pro — ₹99/month
+            </Link>
+            <button
+              onClick={() => setLimitReached(false)}
+              className="w-full text-sm text-gray-400 hover:text-gray-600 py-2"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
