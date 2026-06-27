@@ -3,11 +3,12 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Link from "next/link";
 import PWAInstallBanner from "@/components/PWAInstallBanner";
-import { FileText, PlusCircle, LogIn, LayoutDashboard } from "lucide-react";
+import { FileText, PlusCircle, LogIn, LayoutDashboard, MessageCircle } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 
+
 export default function LandingPage() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   return (
     <main className="min-h-screen bg-gray-50 pb-20 lg:pb-0 flex flex-col">
@@ -51,6 +52,14 @@ export default function LandingPage() {
               >
                 <FileText size={16} />
                 Quick free invoice (not saved)
+              </Link>
+
+              <Link
+                href="/wa"
+                className="w-full flex items-center justify-center gap-2 text-gray-400 hover:text-gray-600 font-medium py-2.5 px-6 rounded-xl transition text-sm"
+              >
+                <MessageCircle size={16} />
+                Quick WhatsApp enquiry
               </Link>
             </>
           ) : (
