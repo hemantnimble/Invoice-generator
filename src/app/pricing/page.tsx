@@ -25,7 +25,7 @@ const FEATURES_PRO = [
 ];
 
 export default function PricingPage() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [billing, setBilling] = useState<"monthly" | "yearly">("monthly");
   const [loading, setLoading] = useState(false);
