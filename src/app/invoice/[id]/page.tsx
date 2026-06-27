@@ -10,7 +10,6 @@ import type { InvoiceRecord, Profile } from "@/types/database";
 import type { InvoiceSchema } from "@/lib/invoice-schema";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import ShareImageButton from "@/components/invoice/ShareImageButton";
-import { computeInvoice } from "@/lib/invoice-utils";
 
 export default function ViewInvoicePage() {
   const { status } = useSession();

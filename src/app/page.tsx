@@ -8,7 +8,7 @@ import AppHeader from "@/components/AppHeader";
 
 
 export default function LandingPage() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   return (
     <main className="min-h-screen bg-gray-50 pb-20 lg:pb-0 flex flex-col">

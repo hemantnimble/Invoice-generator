@@ -153,7 +153,7 @@ export default function NewInvoicePage() {
               </div>
               <h3 className="font-bold text-gray-900">Free limit reached</h3>
               <p className="text-sm text-gray-500 mt-1">
-                You've used all 5 free saved invoices. Upgrade to Pro for unlimited saves.
+                You&apos;ve used all 5 free saved invoices.
               </p>
             </div>
             <Link
