@@ -44,6 +44,7 @@ export default function SettingsPage() {
                 business_name: profile.business_name,
                 business_phone: profile.business_phone,
                 business_address: profile.business_address,
+                default_policies: profile.default_policies,
             }),
         });
         setSaving(false);
@@ -86,7 +87,7 @@ export default function SettingsPage() {
     if (!profile) return null;
 
     return (
-       <main className="min-h-screen bg-gray-50 px-4 py-8 pb-20 lg:pb-0">
+        <main className="min-h-screen bg-gray-50 px-4 py-8 pb-20 lg:pb-0">
             <div className="max-w-xl mx-auto space-y-6">
                 <div>
                     <h1 className="text-xl font-bold text-gray-900">Business Settings</h1>
@@ -124,6 +125,23 @@ export default function SettingsPage() {
                             className={inputClass}
                         />
                     </Field>
+
+                    {/* Policies */}
+                    <div className="bg-white rounded-2xl shadow p-6 space-y-3">
+                        <h3 className="text-sm font-semibold text-gray-700">Default Policies</h3>
+                        <p className="text-xs text-gray-400">
+                            Shown on invoices when you enable the policies toggle while creating one.
+                        </p>
+                        <textarea
+                            value={profile.default_policies ?? ""}
+                            onChange={(e) =>
+                                setProfile({ ...profile, default_policies: e.target.value })
+                            }
+                            rows={8}
+                            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs font-mono leading-relaxed text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#2D3A8C]/30 focus:border-[#2D3A8C] transition resize-y"
+                            placeholder="e.g. No refunds for cancellations. Guests must provide valid ID proof..."
+                        />
+                    </div>
 
                     <button
                         onClick={handleSave}

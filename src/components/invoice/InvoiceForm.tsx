@@ -18,6 +18,7 @@ type Props = {
   onChange: (data: InvoiceSchema) => void;
   defaultValues?: InvoiceSchema;
   hideBusinessFields?: boolean;
+  defaultPolicies?: string | null;
 };
 
 export const baseDefaults: InvoiceSchema = {
@@ -39,13 +40,13 @@ export const baseDefaults: InvoiceSchema = {
   tentType: "",
   items: [{ id: crypto.randomUUID(), name: "", quantity: 1, pricePerUnit: 0 }],
   amountReceived: 0,
-  policies: RENTAL_TYPES[0].defaultPolicies,
+  policies: "",
   businessName: "",
   businessPhone: "",
   colorTheme: "navy",
 };
 
-export default function InvoiceForm({ onChange, defaultValues, hideBusinessFields }: Props) {
+export default function InvoiceForm({ onChange, defaultValues, hideBusinessFields, defaultPolicies }: Props) {
   const {
     register,
     control,
@@ -66,7 +67,6 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
   // When rental type changes — update policies and default item name
   useEffect(() => {
     const config = getRentalType(rentalType);
-    setValue("policies", config.defaultPolicies);
     setValue("items.0.name", config.defaultItem);
   }, [rentalType, setValue]);
 
@@ -318,13 +318,26 @@ export default function InvoiceForm({ onChange, defaultValues, hideBusinessField
       </Section>
 
       {/* Policies */}
-      <Section title="Policies (optional — shown on invoice if filled)">
-        <textarea
-          {...register("policies")}
-          rows={8}
-          className={cn(inputClass, "font-mono text-xs leading-relaxed resize-y")}
-          placeholder="Leave empty to hide this section on the invoice"
-        />
+      {/* Policies Toggle */}
+      <Section title="Policies">
+        <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={!!watch("policies")}
+            onChange={(e) =>
+              setValue("policies", e.target.checked ? defaultPolicies ?? "" : "", {
+                shouldDirty: true,
+              })
+            }
+            className="w-4 h-4 rounded border-gray-300 focus:ring-[#2D3A8C]"
+          />
+          Include policies on this invoice
+        </label>
+        {!defaultPolicies && (
+          <p className="text-xs text-amber-600 mt-1">
+            No default policies set — add them in Settings first.
+          </p>
+        )}
       </Section>
     </div>
   );

@@ -6,6 +6,7 @@ export type Profile = {
   business_address: string;
   logo_url: string | null;
   signature_url: string | null;
+  default_policies: string | null;
   created_at: string;
 };
 

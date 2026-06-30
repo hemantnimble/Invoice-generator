@@ -119,7 +119,12 @@ export default function NewInvoicePage() {
       {/* Layout */}
       <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className={`space-y-4 ${mobileTab === "preview" ? "hidden lg:block" : ""}`}>
-          <InvoiceForm onChange={handleChange} defaultValues={defaultValues} hideBusinessFields />
+          <InvoiceForm
+            onChange={handleChange}
+            defaultValues={defaultValues}
+            hideBusinessFields
+            defaultPolicies={profile.default_policies}
+          />
         </div>
 
         <div className={`space-y-4 ${mobileTab === "form" ? "hidden lg:block" : ""}`}>
